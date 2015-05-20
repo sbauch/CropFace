@@ -1,0 +1,16 @@
+GEM
+  remote: https://rubygems.org/
+  specs:
+    awesome_print_motion (0.1.0)
+    bubble-wrap (1.8.0)
+    rake (10.4.2)
+    sugarcube (3.3.4)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  awesome_print_motion
+  bubble-wrap
+  rake
+  sugarcube
