@@ -15,6 +15,7 @@ class CropController < UIViewController
   def viewDidLoad
     super
     @path = CGPathCreateMutable()
+    @line_count = 0
     launchEditor
     self
   end
@@ -37,7 +38,7 @@ class CropController < UIViewController
     return if !@editing
     touch = touches.first
     touchPoint =  touch.locationInView(self.view)
-    touchPoint.y -= 60
+    #touchPoint.y -= 60
     @lastPoint = touchPoint
 
     @cursor = UIView.alloc.init.tap do |c|
@@ -56,7 +57,7 @@ class CropController < UIViewController
 
     touch = touches.first
     currentPoint = touch.locationInView(self.view)
-    currentPoint.y -= 60
+    #currentPoint.y -= 60
     @cursor.move_to([currentPoint.x - 10, currentPoint.y - 10], duration: 0)
 
     drawLineFrom(@lastPoint, currentPoint)
@@ -68,7 +69,8 @@ class CropController < UIViewController
   def touchesEnded(touches, withEvent: event)
     @cursor.removeFromSuperview
     @cursor = nil
-
+    @line_count == 0
+    CGPathCloseSubpath(@path)
   end
 
   def drawLineFrom(fromPoint, toPoint)
@@ -83,9 +85,14 @@ class CropController < UIViewController
     CGContextSetLineWidth(context, 20.0)
     CGContextSetBlendMode(context, KCGBlendModeClear)
 
-    path = CGContextCopyPath(context)
-    CGPathAddPath(@path, nil, path)
+    #path = CGContextCopyPath(context)
+    #CGPathAddPath(@path, nil, path)
 
+    if @line_count == 0
+      CGPathMoveToPoint(@path, nil, fromPoint.x, fromPoint.y)
+    end
+    CGPathAddLineToPoint(@path, nil, toPoint.x, toPoint.y)
+    @line_count += 1
 
     CGContextStrokePath(context)
 
